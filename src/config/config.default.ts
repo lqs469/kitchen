@@ -32,5 +32,15 @@ export default (appInfo: EggAppInfo) => {
     publicPath: 'public',
   };
 
+  config.io = {
+    init: {}, // passed to engine.io
+    namespace: {
+      ws: {
+        connectionMiddleware: ['auth'],
+        packetMiddleware: [],
+      },
+    },
+  };
+
   return config;
 };

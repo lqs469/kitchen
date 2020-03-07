@@ -11,4 +11,9 @@ export default {
     enable: true,
     package: 'egg-view-assets',
   },
+
+  io: {
+    enable: true,
+    package: 'egg-socket.io',
+  },
 } as EggPlugin;

@@ -1,23 +1,21 @@
 /**
- * @description User-Service parameters
+ * @description Event abstractions, Data-Service response
  */
-export interface IUserOptions {
-  id: number;
+export interface IEvent {
+  destination: string;
+  event_name: string;
+  id: string;
+  name: string;
+  sent_at_second: number;
 }
 
 /**
- * @description User-Service response
+ * @description Data-Service abstractions
  */
-export interface IUserResult {
-  id: number;
-  username: string;
-  phone: string;
-  email?: string;
+export interface IDataService {
+  loadData(): Promise<IEvent[]>;
 }
 
-/**
- * @description User-Service abstractions
- */
-export interface IUserService {
-  getUser(options: IUserOptions): Promise<IUserResult>;
+export interface IEventByTime {
+  [key: number]: IEvent[];
 }

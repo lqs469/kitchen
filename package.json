@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "egg-scripts": "^2.13.0",
+    "egg-socket.io": "^4.1.6",
     "egg-view-assets": "^1.6.0",
     "egg-view-nunjucks": "^2.2.0",
     "midway": "^1.18.0"
@@ -34,7 +35,7 @@
     "start_build": "npm run build && cross-env NODE_ENV=local midway-bin dev",
     "clean": "midway-bin clean",
     "debug": "cross-env NODE_ENV=local midway-bin debug --ts",
-    "test": "npm run lint & midway-bin test --ts",
+    "test": "npm run lint & npm run build && cross-env NODE_ENV=test midway-bin test --ts",
     "cov": "midway-bin cov --ts",
     "lint": "tslint -c tslint.json --project .",
     "ci": "npm run cov",
