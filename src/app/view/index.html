@@ -15,7 +15,7 @@
 
 {% if ctx.app.config.env === 'local' -%}
 {{ helper.assets.getScript('static/js/bundle.js') | safe }}
-{{ helper.assets.getScript('static/js/main.chunk.js') | safe }}
+<!-- {{ helper.assets.getScript('static/js/main.chunk.js') | safe }} -->
 {{ helper.assets.getScript('static/js/chunk.js') | safe }}
 {%- endif %}
 </body>

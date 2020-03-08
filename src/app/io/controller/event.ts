@@ -5,7 +5,12 @@ module.exports = (app: Application) => {
   class Controller extends app.Controller {
     async index() {
       const message = this.ctx.args[0];
-      console.log('[socket: server]', message);
+      console.log('[io.events.index]', message);
+
+      if (message !== 'ready') {
+        return;
+      }
+
       const dataService = await this.ctx.requestContext.getAsync('dataService');
       const data: IEvent[] = await dataService.loadData();
 
@@ -32,8 +37,13 @@ module.exports = (app: Application) => {
         }, 1000);
       });
 
-      // TODO: Events end.
       await this.ctx.socket.emit('res', 'All events are over.');
+    }
+
+    async modify() {
+      const message = this.ctx.args[0];
+      console.log('[io.events.modify]', message);
+      this.handleEvent([message]);
     }
 
     handleData(events: IEvent[]): IEventByTime {
@@ -48,7 +58,6 @@ module.exports = (app: Application) => {
     }
 
     handleEvent(events: IEvent[]) {
-      console.log(events);
       this.ctx.socket.emit('res', events);
     }
   }

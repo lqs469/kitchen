@@ -7,13 +7,15 @@ import Panel from './components/Panel';
 
 const { Header, Content, Footer } = Layout;
 
+let socket = null;
+
 function App() {
   const [events, setEvents] = useState([]);
   const [time, setTime] = useState(0);
 
   useEffect(() => {
     let interval = null;
-    const socket = io('/ws');
+    socket = io('/ws');
 
     socket.on('connect', () => {
       console.log('connect');
@@ -28,6 +30,12 @@ function App() {
         setEvents(value => [...value, ...data].reverse());
       } else {
         setTime(() => 0);
+        clearInterval(interval);
+
+        if (data === 'All events are over.') {
+          return;
+        }
+
         interval = setInterval(() => {
           setTime(time => time + 1);
         }, 1000);
@@ -36,6 +44,9 @@ function App() {
 
     socket.on('disconnect', () => {
       console.log('disconnect');
+      setTime(() => 0);
+      setEvents(() => []);
+      clearInterval(interval);
     });
 
     return () => {
@@ -50,7 +61,7 @@ function App() {
         <span className="timer">timer: {time}</span>
       </Header>
       <Content className="content">
-        <Panel events={events} />
+        <Panel events={events} socket={socket} />
       </Content>
       <Footer className="footer">Created by Allen Lee</Footer>
     </Layout>

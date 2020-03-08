@@ -35,7 +35,8 @@
     "start_build": "npm run build && cross-env NODE_ENV=local midway-bin dev",
     "clean": "midway-bin clean",
     "debug": "cross-env NODE_ENV=local midway-bin debug --ts",
-    "test": "npm run lint & npm run build && cross-env NODE_ENV=test midway-bin test --ts",
+    "test:client": "cd client/index && npm run test",
+    "test": "npm run lint && npm run build && cross-env NODE_ENV=test midway-bin test --ts",
     "cov": "midway-bin cov --ts",
     "lint": "tslint -c tslint.json --project .",
     "ci": "npm run cov",
@@ -56,7 +57,7 @@
     "url": ""
   },
   "author": "",
-  "license": "MIT",
+  "license": "",
   "midway-bin-build": {
     "include": [
       "app/public",

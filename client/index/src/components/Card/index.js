@@ -5,7 +5,7 @@ import { EditOutlined, NodeIndexOutlined } from '@ant-design/icons';
 import Status from '../Status';
 import './Card.css';
 
-const EventCard = ({ props }) => {
+const EventCard = ({ props, setCurrOrderId, setMapProps }) => {
   return (
     <Card
       hoverable
@@ -16,23 +16,28 @@ const EventCard = ({ props }) => {
         </Tooltip>
       }
       size="small"
-      actions={[<EditOutlined key="edit" />, <NodeIndexOutlined key="map" />]}
+      actions={[
+        <EditOutlined key="edit" onClick={() => setCurrOrderId(props.id)} />,
+        <NodeIndexOutlined key="map" onClick={() => setMapProps(props)} />,
+      ]}
     >
       <div>{props.destination}</div>
-
       <div className="card-timeline">
-        <Timeline mode="left">
-          {props.events.map((e, index) => (
-            <Timeline.Item
-              key={index}
-              label={moment(e.time).format('HH:mm:ss')}
-            >
-              <Status state={e.event_name} />
-            </Timeline.Item>
-          ))}
-        </Timeline>
+        <OrderTimeline events={props.events} />
       </div>
     </Card>
+  );
+};
+
+export const OrderTimeline = ({ events }) => {
+  return (
+    <Timeline mode="left">
+      {events.map((e, index) => (
+        <Timeline.Item key={index} label={moment(e.time).format('HH:mm:ss')}>
+          <Status state={e.event_name} />
+        </Timeline.Item>
+      ))}
+    </Timeline>
   );
 };
 

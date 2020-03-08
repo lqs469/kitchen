@@ -4,34 +4,55 @@ import moment from 'moment';
 import History from '../History';
 import Filter from '../Filter';
 import EventCard from '../Card';
+import OrderDetail from '../OrderDetail';
 import './Panel.css';
+import MapModal from '../MapModal';
 
 const initFilter = ['CREATED', 'COOKED', 'DRIVER_RECEIVED'];
 
-const Panel = ({ events }) => {
+const Panel = ({ events, socket }) => {
   const [historyVisible, setHistoryVisible] = useState(false);
   const [filter, setFilter] = useState(initFilter);
+  const [currOrderId, setCurrOrderId] = useState(null);
+  const [mapProps, setMapProps] = useState(null);
 
   const eventById = useMemo(() => {
     const eventObj = events.reduce((p, c) => {
       if (!p[c.id]) {
-        p[c.id] = [];
+        p[c.id] = {
+          id: c.id,
+          destination: c.destination,
+          name: c.name,
+          state: c.event_name,
+          events: [],
+        };
       }
-      p[c.id].push(c);
+
+      if (c.event_name) {
+        p[c.id].events.push(c);
+      }
+
+      if (p[c.id].destination !== c.destination) {
+        p[c.id].destination = c.destination;
+      }
+
       return p;
     }, {});
 
-    return Object.keys(eventObj).map(id => {
-      const eventArr = eventObj[id].sort((a, b) => b.time - a.time);
+    const result = Object.keys(eventObj).map(id => {
+      const eventValue = eventObj[id];
+      const sortedEvents = eventValue.events.sort((a, b) => b.time - a.time);
 
       return {
-        id: eventArr[0].id,
-        destination: eventArr[0].destination,
-        name: eventArr[0].name,
-        state: eventArr[0].event_name,
-        events: eventArr,
+        id: eventValue.id,
+        destination: eventValue.destination,
+        name: eventValue.name,
+        state: sortedEvents[0].event_name,
+        events: sortedEvents,
       };
     });
+
+    return result;
   }, [events]);
 
   const filteredData = useMemo(() => {
@@ -64,6 +85,18 @@ const Panel = ({ events }) => {
     return filteredData.filter(order => filter.includes(order.state));
   }, [eventById, filter]);
 
+  const currOrderDetail = useMemo(() => {
+    return eventById.find(order => order.id === currOrderId);
+  }, [currOrderId, eventById]);
+
+  const currOrderMap = useMemo(() => {
+    if (mapProps) {
+      return eventById.find(order => order.id === mapProps.id);
+    } else {
+      return null;
+    }
+  }, [mapProps, eventById]);
+
   return (
     <div>
       <section className="panel-header">
@@ -80,11 +113,27 @@ const Panel = ({ events }) => {
           )}
           renderItem={item => (
             <List.Item>
-              <EventCard props={item} />
+              <EventCard
+                props={item}
+                setCurrOrderId={setCurrOrderId}
+                setMapProps={setMapProps}
+              />
             </List.Item>
           )}
         />
       </section>
+
+      {currOrderId && (
+        <OrderDetail
+          props={currOrderDetail}
+          detailVisible={!!currOrderId}
+          setDetailVisible={() => setCurrOrderId(null)}
+          socket={socket}
+        />
+      )}
+
+      <MapModal props={currOrderMap} setMapProps={setMapProps} />
+
       <Modal
         title="History"
         visible={historyVisible}

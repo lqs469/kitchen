@@ -7,6 +7,7 @@
     "inlineSourceMap": true,
     "module": "commonjs",
     "newLine": "lf",
+    "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "outDir": "dist",
@@ -15,9 +16,10 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "stripInternal": true,
-    "target": "ES2017"
+    "target": "ES2018"
   },
   "exclude": [
+    "client",
     "app/public",
     "app/views",
     "dist",

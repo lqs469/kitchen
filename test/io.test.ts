@@ -17,10 +17,8 @@ function client(nsp = '', opts = { port: 7001 }) {
 }
 
 describe('test/socketio.test.ts', () => {
-  let app: any;
-
-  it('should async/await works ok', done => {
-    app = mm.cluster({
+  it('should event feeds/modify works ok', done => {
+    const app = mm.cluster({
       baseDir: path.join(__dirname, '../'),
       workers: 1,
       typescript: true,
@@ -32,9 +30,12 @@ describe('test/socketio.test.ts', () => {
     app.ready().then(() => {
       const socket = client('/ws', { port: basePort });
 
-      socket.on('connect', () => socket.emit('event', 'event-data'));
+      socket.on('connect', () => {
+        socket.emit('event', 'ready');
+      });
 
       socket.on('disconnect', () => {
+        console.log('discont');
         app.close().then(done, done);
       });
 
@@ -42,10 +43,17 @@ describe('test/socketio.test.ts', () => {
         if (idx === 1) {
           assert(msg === 'connected!');
         }
+
         if (idx === 2 && typeof msg[0] === 'object') {
           assert(msg[0].id === 'f7711c3b');
+          socket.emit('modify', 'modify-event-data');
+        }
+
+        if (idx === 3) {
+          assert(msg[0] === 'modify-event-data');
           socket.close();
         }
+
         idx++;
       });
     });
