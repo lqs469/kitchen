@@ -25,22 +25,22 @@ see [midway docs][midway] for more detail.
 ### Development
 
 ```bash
-$ tnpm i
-$ tnpm run dev
+$ npm install
+$ npm run dev
 $ open http://localhost:6001/
 ```
+
+**Notice**: if `npm install` throw an error that shows `postinstall: cannot run in wd xxxx@xxx`. try `npm install --unsafe-perm`.
 
 ### Deploy
 
 ```bash
-$ tnpm start
-$ tnpm stop
+$ npm start
+$ npm stop
 ```
 
 ### tnpm scripts
 
-- Use `tnpm run lint` to check code style.
-- Use `tnpm test` to run unit test.
-- Use `tnpm run autod` to auto detect dependencies upgrade, see [autod](https://www.tnpmjs.com/package/autod) for more detail.
-
-[midway]: https://midwayjs.alibaba-inc.com
+- Use `npm run lint` to check code style.
+- Use `npm test` to run unit test.
+- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.tnpmjs.com/package/autod) for more detail.
