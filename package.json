@@ -30,7 +30,7 @@
     "postinstall": "cd client/index && npm install",
     "dev:client": "cd client/index && npm run start",
     "dev": "cross-env NODE_ENV=local midway-bin dev --ts",
-    "start": "egg-scripts start --daemon --title=midway-server-kitchen --framework=midway --ts",
+    "start": "egg-scripts start --daemon --title=midway-server-kitchen --framework=midway --ts  --sticky",
     "stop": "egg-scripts stop --title=midway-server-kitchen",
     "start_build": "npm run build && cross-env NODE_ENV=local midway-bin dev",
     "clean": "midway-bin clean",
